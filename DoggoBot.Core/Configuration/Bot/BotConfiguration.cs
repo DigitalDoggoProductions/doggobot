@@ -21,5 +21,17 @@ namespace DoggoBot.Core.Configuration.Bot
             else
                 throw new FileNotFoundException("Configuration File not found!");
         }
+
+        /// <summary>
+        /// Add to the total tweet count
+        /// </summary>
+        public void AddTweetToCount()
+        {
+            var cObject = Load();
+            cObject.TweetCount = cObject.TweetCount + 1;
+
+            string newCount = JsonConvert.SerializeObject(cObject, Formatting.Indented);
+            File.WriteAllText(BasePath, newCount);
+        }
     }
 }

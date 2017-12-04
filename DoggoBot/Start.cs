@@ -8,6 +8,8 @@ using Discord.WebSocket;
 
 using Microsoft.Extensions.DependencyInjection;
 
+using Tweetinvi;
+
 using DoggoBot.Core.Configuration.Bot;
 using DoggoBot.Common.Handlers.CommandHandler;
 
@@ -45,6 +47,9 @@ namespace DoggoBot
 
             await borkClient.LoginAsync(TokenType.Bot, creds.DiscordToken);
             await borkClient.StartAsync();
+
+            // Easiest way to do this, looks crappy though
+            Auth.SetUserCredentials(creds.ConsumerKey, creds.ConsumerSecret, creds.AccessToken, creds.AccessTokenSecret);
 
             await borkClient.SetGameAsync(creds.DiscordGame);
 
