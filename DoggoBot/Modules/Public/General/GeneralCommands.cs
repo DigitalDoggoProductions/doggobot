@@ -21,6 +21,7 @@ using DoggoBot.Core.Configuration.Bot;
 namespace DoggoBot.Modules.Public.General
 {
     [Name("General")]
+    [Summary("Contains random and general commands for users")]
     public class GeneralCommands : DoggoModuleBase
     {
         private readonly DiscordSocketClient borkClient;

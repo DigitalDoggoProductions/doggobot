@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using Discord.Addons.InteractiveCommands;
 
 using Microsoft.Extensions.DependencyInjection;
 
@@ -78,6 +79,8 @@ namespace DoggoBot
                 .AddSingleton<CommandHandler>()
                 // Configuration
                 .AddSingleton<BotConfiguration>()
+                // Other
+                .AddSingleton<InteractiveService>()
                 .BuildServiceProvider();
         }
     }

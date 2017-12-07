@@ -12,5 +12,5 @@
   <ItemGroup>
     <Folder Include="Modules\Private\" />
   </ItemGroup>
-
+  
 </Project>

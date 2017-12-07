@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Discord.Addons.InteractiveCommands" Version="1.2.4" />
     <PackageReference Include="Discord.Net" Version="2.0.0-beta-00854" />
     <PackageReference Include="TweetinviAPI" Version="2.1.0" />
   </ItemGroup>
