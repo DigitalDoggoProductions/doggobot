@@ -11,7 +11,7 @@ namespace DoggoBot.Core.Common.Colors
         public Color EmbedBlue = new Color(128, 212, 255);
         public Color EmbedLilac = new Color(214, 196, 237);
         public Color EmbedPink = new Color(255, 172, 194);
-        public Color EmbedOrnage = new Color(255, 204, 153);
+        public Color EmbedOrange = new Color(255, 204, 153);
         public Color EmbedMint = new Color(178, 247, 211);
         public Color EmbedYellow = new Color(255, 251, 181);
         public Color EmbedPurple = new Color(163, 97, 249);
