@@ -12,7 +12,7 @@ namespace DoggoBot.Modules.Public.Moderation
 {
     [Name("Moderation")]
     [Summary("Contains moderation commands for server mods and admins")]
-    [TypeOf(TypeOfUser.GuildModerator)]
+    [RequiredUserType(TypeOfUser.GuildModerator)]
     public class ModerationCommands : DoggoModuleBase
     {
         [Command("kick")]

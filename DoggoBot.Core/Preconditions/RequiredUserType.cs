@@ -7,11 +7,11 @@ using Discord.Commands;
 namespace DoggoBot.Core.Preconditions
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
-    public class TypeOf : PreconditionAttribute
+    public class RequiredUserType : PreconditionAttribute
     {
         private TypeOfUser? ourType { get; set; }
 
-        public TypeOf(TypeOfUser type)
+        public RequiredUserType(TypeOfUser type)
             => ourType = type;
 
         public override Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, CommandInfo command, IServiceProvider services)
@@ -38,7 +38,7 @@ namespace DoggoBot.Core.Preconditions
                 return Task.FromResult(PreconditionResult.FromError("User does not have the correct permissions."));
             }
             else
-                return Task.FromResult(PreconditionResult.FromError("No defined TypeOfUser - Should not see this message"));
+                return Task.FromResult(PreconditionResult.FromError("No defined TypeOfUser - Should not see this error message!"));
         }
     }
 
