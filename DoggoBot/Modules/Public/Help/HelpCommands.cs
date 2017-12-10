@@ -35,14 +35,11 @@ namespace DoggoBot.Modules.Public.Help
             string info = null;
             IUserMessage ourMsg = null;
 
-            try
-            {
-                ourMsg = await Context.Message.Author.SendMessageAsync("Hello! What can I assist you with today? [Module, Command]");
-            }
-            catch (HttpException ex) when (ex.DiscordCode == 50007) { new LogMessage(LogSeverity.Error, ex.Source, ex.Message); ourMsg = await ReplyAsync("Hello! What can I assist you with today? [Module, Command]"); }
+            try { ourMsg = await Context.User.SendMessageAsync("Hello! What can I assist you with today? [Module, Command]"); }
+            catch (HttpException ex) when (ex.DiscordCode == 50007) { ourMsg = await ReplyAsync("Hello! What can I assist you with today? [Module, Command]"); }
             finally
             {
-                var uRes = await borkInteract.WaitForMessage(Context.Message.Author, ourMsg.Channel, TimeSpan.FromSeconds(60));
+                var uRes = await borkInteract.WaitForMessage(Context.User, ourMsg.Channel, TimeSpan.FromSeconds(60));
 
                 if (uRes != null)
                 {
@@ -59,7 +56,7 @@ namespace DoggoBot.Modules.Public.Help
                             var src = borkCommands.Modules.FirstOrDefault(x => x.Name.ToLower() == uRes.Content.ToLower());
 
                             if (src == null)
-                                await DoMessages(ourMsg.Channel, ourMsg, "**The module name you gave was not valid, please try again.**");
+                                await DoMessages(ourMsg.Channel, ourMsg, "**The module name you gave was not valid, please use the help command again.**");
                             else
                             {
                                 info = null;
@@ -70,7 +67,7 @@ namespace DoggoBot.Modules.Public.Help
                             }
                         }
                         else
-                            await DoMessages(ourMsg.Channel, ourMsg, "**Your request timed out, please try again**");
+                            await DoMessages(ourMsg.Channel, ourMsg, "**Your request timed out, please use the help command again.**");
                     }
                     else if (uRes.Content.ToLower() == "command")
                     {
@@ -82,7 +79,7 @@ namespace DoggoBot.Modules.Public.Help
                             var src = borkCommands.Search(Context, uRes.Content);
 
                             if (!src.IsSuccess)
-                                await DoMessages(ourMsg.Channel, ourMsg, "**The command name you gave was not valid, please try again.**");
+                                await DoMessages(ourMsg.Channel, ourMsg, "**The command name you gave was not valid, please use the help command again.**");
                             else
                             {
                                 info = null;
@@ -94,13 +91,13 @@ namespace DoggoBot.Modules.Public.Help
                             }
                         }
                         else
-                            await DoMessages(ourMsg.Channel, ourMsg, "**Your request timed out, please try again**");
+                            await DoMessages(ourMsg.Channel, ourMsg, "**Your request timed out, please use the help command again.**");
                     }
                     else
-                        await DoMessages(ourMsg.Channel, ourMsg, "**The option you gave was not valid, please try again.**");
+                        await DoMessages(ourMsg.Channel, ourMsg, "**The option you gave was not valid, please use the help command again.**");
                 }
                 else
-                    await DoMessages(ourMsg.Channel, ourMsg, "**Your request timed out, please try again**");
+                    await DoMessages(ourMsg.Channel, ourMsg, "**Your request timed out, please use the help command again.**");
             }
         }
 

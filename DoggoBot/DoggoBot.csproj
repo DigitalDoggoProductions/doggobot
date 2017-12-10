@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Modules\Private\" />
+    <Folder Include="Modules\Private\Bot\" />
   </ItemGroup>
   
 </Project>

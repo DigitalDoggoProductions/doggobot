@@ -4,6 +4,10 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 
+using Microsoft.Extensions.DependencyInjection;
+
+using DoggoBot.Core.Configuration.Bot;
+
 namespace DoggoBot.Core.Preconditions
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
@@ -35,6 +39,10 @@ namespace DoggoBot.Core.Preconditions
                     if (user.Id == user.Guild.OwnerId)
                         return Task.FromResult(PreconditionResult.FromSuccess());
 
+                if (ourType == TypeOfUser.Doggo)
+                    if (services.GetRequiredService<BotConfiguration>().Load().OwnerIDs.Contains(context.User.Id))
+                        return Task.FromResult(PreconditionResult.FromSuccess());
+
                 return Task.FromResult(PreconditionResult.FromError("User does not have the correct permissions."));
             }
             else
@@ -46,6 +54,7 @@ namespace DoggoBot.Core.Preconditions
     {
         GuildModerator = 0,
         GuildAdmin = 1,
-        GuildOwner = 2
+        GuildOwner = 2,
+        Doggo = 3
     }
 }

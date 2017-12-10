@@ -27,7 +27,12 @@ namespace DoggoBot.Common.Handlers.CommandHandler
 
             if (!message.HasStringPrefix(borkServices.GetRequiredService<BotConfiguration>().Load().BotPrefix, ref argPos) || message.HasMentionPrefix(borkClient.CurrentUser, ref argPos)) return;
 
-            var res = await borkCommands.ExecuteAsync(borkContext, argPos, borkServices);
+            IResult res;
+            using (IDisposable enterTyping = borkContext.Channel.EnterTypingState())
+            {
+                res = await borkCommands.ExecuteAsync(borkContext, argPos, borkServices);
+                enterTyping.Dispose();
+            }
 
             if (!res.IsSuccess)
                 await borkContext.Channel.SendMessageAsync(res.ErrorReason);

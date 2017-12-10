@@ -10,7 +10,6 @@ using Newtonsoft.Json.Linq;
 
 using DoggoBot.Core.Models.Module;
 using DoggoBot.Core.Common.Colors;
-using DoggoBot.Core.Configuration.Bot;
 using DoggoBot.Core.Models.UbranJson;
 
 namespace DoggoBot.Modules.Public.Fun
@@ -20,7 +19,6 @@ namespace DoggoBot.Modules.Public.Fun
     public class FunCommands : DoggoModuleBase
     {
         private readonly HttpClient ourHttp = new HttpClient();
-
         private readonly Colors ourColors = new Colors();
 
         [Command("crush")]
@@ -33,7 +31,7 @@ namespace DoggoBot.Modules.Public.Fun
         [Summary("Say who you love in chat ;)")]
         [Remarks("love @user")]
         public async Task LoveAsync(IGuildUser user)
-            => await ReplyEmbed(new EmbedBuilder().WithColor(ourColors.EmbedLilac).WithDescription($"Awwww, How sweet~\n{Context.Message.Author.Mention} loves you {user.Mention}!").Build());
+            => await ReplyEmbed(new EmbedBuilder().WithColor(ourColors.EmbedPink).WithDescription($"Awwww, How sweet~\n{Context.Message.Author.Mention} loves you {user.Mention}!").Build());
 
         [Command("dog")]
         [Alias("doggo", "borker")]
