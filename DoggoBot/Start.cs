@@ -11,7 +11,8 @@ using Microsoft.Extensions.DependencyInjection;
 
 using Tweetinvi;
 
-using DoggoBot.Core.Configuration.Bot;
+using DoggoBot.Core.Services.Audio;
+using DoggoBot.Core.Services.Configuration.Bot;
 using DoggoBot.Common.Handlers.CommandHandler;
 
 namespace DoggoBot
@@ -80,6 +81,7 @@ namespace DoggoBot
                 // Configuration
                 .AddSingleton<BotConfiguration>()
                 // Other
+                .AddSingleton<AudioService>()
                 .AddSingleton<InteractiveService>()
                 .BuildServiceProvider();
         }

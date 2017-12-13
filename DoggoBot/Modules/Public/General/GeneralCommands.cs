@@ -16,7 +16,7 @@ using Tweetinvi;
 
 using DoggoBot.Core.Models.Module;
 using DoggoBot.Core.Common.Colors;
-using DoggoBot.Core.Configuration.Bot;
+using DoggoBot.Core.Services.Configuration.Bot;
 
 namespace DoggoBot.Modules.Public.General
 {

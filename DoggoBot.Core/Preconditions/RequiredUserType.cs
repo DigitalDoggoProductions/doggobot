@@ -6,7 +6,7 @@ using Discord.Commands;
 
 using Microsoft.Extensions.DependencyInjection;
 
-using DoggoBot.Core.Configuration.Bot;
+using DoggoBot.Core.Services.Configuration.Bot;
 
 namespace DoggoBot.Core.Preconditions
 {

@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2010
+VisualStudioVersion = 15.0.27130.2003
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DoggoBot", "DoggoBot\DoggoBot.csproj", "{6B9DFBFB-ACD2-4BBB-9FDB-917E1998E6F9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DoggoBot", "DoggoBot\DoggoBot.csproj", "{6B9DFBFB-ACD2-4BBB-9FDB-917E1998E6F9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DoggoBot.Core", "DoggoBot.Core\DoggoBot.Core.csproj", "{C94B7A4A-923F-4EF3-8541-D5F5B826A234}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DoggoBot.Core", "DoggoBot.Core\DoggoBot.Core.csproj", "{C94B7A4A-923F-4EF3-8541-D5F5B826A234}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

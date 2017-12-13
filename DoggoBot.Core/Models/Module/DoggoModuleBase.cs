@@ -71,7 +71,7 @@ namespace DoggoBot.Core.Models.Module
             if (message.Reactions.ContainsKey(emoji))
                 return Context.Channel.SendMessageAsync(response);
 
-            else { message.AddReactionAsync(emoji); return Context.Channel.SendMessageAsync(response); }
+            else { var t1 = message.AddReactionAsync(emoji); var t2 = Context.Channel.SendMessageAsync(response); Task.WhenAll(t1, t2); return t2; }
         }
     }
 }

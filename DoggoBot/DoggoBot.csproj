@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Data\Audio\" />
     <Folder Include="Modules\Private\Bot\" />
   </ItemGroup>
   

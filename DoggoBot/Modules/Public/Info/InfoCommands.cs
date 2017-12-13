@@ -15,7 +15,7 @@ namespace DoggoBot.Modules.Public.Info
     [RequiredChannelType(TypeOfChannel.Guild)]
     public class InfoCommands : DoggoModuleBase
     {
-        private Colors ourColors = new Colors();
+        private readonly Colors ourColors = new Colors();
 
         [Command("myinfo")]
         [Alias("me", "minfo")]

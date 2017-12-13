@@ -8,7 +8,7 @@ using Discord.Commands;
 using Discord.Addons.InteractiveCommands;
 
 using DoggoBot.Core.Models.Module;
-using DoggoBot.Core.Configuration.Bot;
+using DoggoBot.Core.Services.Configuration.Bot;
 
 namespace DoggoBot.Modules.Public.Help
 {
