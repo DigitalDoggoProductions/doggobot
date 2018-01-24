@@ -29,7 +29,11 @@ namespace DoggoBot
         {
             borkClient = new DiscordSocketClient(new DiscordSocketConfig()
             {
+#if DEBUG
                 LogLevel = LogSeverity.Verbose,
+#else
+                LogLevel = LogSeverity.Info,
+#endif
                 MessageCacheSize = 100
             });
 
@@ -60,13 +64,18 @@ namespace DoggoBot
 
         private Task Logger(LogMessage msg)
         {
-            string logM = $"[{DateTime.Now.ToString("dd/MM/yyyy - HH:mm:ss")}] ({msg.Severity}) {msg.Message} {msg.Exception}";
+#if DEBUG
+            string logFileMsg = $"[{DateTime.Now.ToString("MM/dd/yyyy - HH:mm:ss")}] ({msg.Severity}) {msg.Message} {msg.Exception}";
+            string consoleLogMsg = logFileMsg;
+#else
+            string logFileMsg = $"[{DateTime.Now.ToString("MM/dd/yyyy - HH:mm:ss")}] ({msg.Severity}) {msg.Message} {msg.Exception}";
+            string consoleLogMsg = $"[{DateTime.Now.ToString("MM/dd/yyyy - HH:mm:ss")}] ({msg.Severity}) {msg.Message}";
+#endif
+
+            Console.WriteLine(consoleLogMsg);
 
             using (StreamWriter file = new StreamWriter(File.Open(@"Data/Logging/FullLog.txt", FileMode.Append)))
-            {
-                file.Write(logM + Environment.NewLine);
-                Console.WriteLine(logM);
-            }
+                file.Write(logFileMsg + Environment.NewLine);
 
             return Task.CompletedTask;
         }

@@ -10,14 +10,14 @@
     <AssemblyVersion>5.0.0</AssemblyVersion>
     <FileVersion>1.0.0</FileVersion>
   </PropertyGroup>
-
+  
   <ItemGroup>
     <ProjectReference Include="..\DoggoBot.Core\DoggoBot.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Data\Audio\" />
-    <Folder Include="Modules\Private\Bot\" />
+    <Folder Include="Data\Temp\" />
   </ItemGroup>
   
 </Project>

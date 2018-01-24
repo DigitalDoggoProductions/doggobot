@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using System.Linq;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Collections.Concurrent;
@@ -9,6 +8,7 @@ using Discord.Audio;
 
 using YoutubeExplode;
 using YoutubeExplode.Models;
+using YoutubeExplode.Models.MediaStreams;
 
 namespace DoggoBot.Core.Services.Audio
 {
@@ -49,24 +49,28 @@ namespace DoggoBot.Core.Services.Audio
                 else { await audio.StopAsync(); }
 
                 if (ourGuildProcess.TryRemove(guild.Id, out Process proc))
-                    try { proc.Kill(); proc.Close(); }
-                    catch { return; }
+                    proc.Kill();
+
+                await Task.Delay(1000);
+
+                foreach (var song in new DirectoryInfo($@"Data/Audio/{guild.Id}").GetFiles())
+                    File.Delete(song.FullName);
+
+                Directory.Delete($@"Data/Audio/{guild.Id}");
             }
         }
 
         public async Task SendAudioAsync(IGuild guild, string songID)
         {
-            Video vidInfo = await ourYoutube.GetVideoAsync(songID);
-            var vidStreams = vidInfo.AudioStreamInfos.OrderBy(x => x.Bitrate).Last();
+            Video vid = await ourYoutube.GetVideoAsync(songID);
+            var stream = (await ourYoutube.GetVideoMediaStreamInfosAsync(songID)).Muxed.WithHighestVideoQuality();
 
-            ToCopyFile = $@"{GuildAudioFiles}{guild.Id}/{vidInfo.Id}.{vidStreams.Container}";
+            ToCopyFile = $@"{GuildAudioFiles}{guild.Id}/{vid.Id}.{stream.Container.GetFileExtension()}";
             if (!Directory.Exists($"{GuildAudioFiles}{guild.Id}"))
                 Directory.CreateDirectory($"{GuildAudioFiles}{guild.Id}");
 
             if (!File.Exists(ToCopyFile))
-                using (var goIn = await ourYoutube.GetMediaStreamAsync(vidStreams))
-                using (var goOut = File.Create(ToCopyFile))
-                    await goIn.CopyToAsync(goOut);
+                await ourYoutube.DownloadMediaStreamAsync(stream, ToCopyFile);
 
             if (ourGuilds.TryGetValue(guild.Id, out IAudioClient audio))
             {

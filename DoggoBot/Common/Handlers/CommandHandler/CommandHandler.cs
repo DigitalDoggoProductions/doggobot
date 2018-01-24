@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using System.Threading.Tasks;
 
 using Discord.Commands;
@@ -6,16 +7,29 @@ using Discord.WebSocket;
 
 using Microsoft.Extensions.DependencyInjection;
 
-using DoggoBot.Core.Models.Handler;
 using DoggoBot.Core.Models.Context;
 using DoggoBot.Core.Services.Configuration.Bot;
 
 namespace DoggoBot.Common.Handlers.CommandHandler
 {
-    public class CommandHandler : BasicHandlerModel
+    public class CommandHandler
     {
-        public CommandHandler(DiscordSocketClient client, CommandService commands, IServiceProvider services) : base(client, commands, services)
-            => borkClient.MessageReceived += HandleMessageReceived;
+        private readonly DiscordSocketClient borkClient;
+        private readonly CommandService borkCommands;
+        private IServiceProvider borkServices;
+
+        public CommandHandler(DiscordSocketClient client, CommandService commands, IServiceProvider services)
+        {
+            borkClient = client;
+            borkCommands = commands;
+            borkServices = services;
+        }
+
+        public async Task InitAsync()
+        {
+            borkClient.MessageReceived += HandleMessageReceived;
+            await borkCommands.AddModulesAsync(Assembly.GetEntryAssembly());
+        }
 
         private async Task HandleMessageReceived(SocketMessage incoming)
         {
