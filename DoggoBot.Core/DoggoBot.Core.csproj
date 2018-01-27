@@ -6,7 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="Discord.Addons.InteractiveCommands" Version="1.2.4" />
-    <PackageReference Include="Discord.Net" Version="2.0.0-beta-00854" />
+    <PackageReference Include="Discord.Net" Version="2.0.0-beta-00880" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="3.0.0-dev-61717-03" />
     <PackageReference Include="Microsoft.CodeAnalysis.Scripting" Version="3.0.0-dev-61717-03" />
     <PackageReference Include="Microsoft.Data.SQLite" Version="2.0.0" />

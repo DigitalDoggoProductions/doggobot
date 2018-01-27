@@ -44,10 +44,10 @@ namespace DoggoBot.Modules.Public.Moderation
                 await ReplyReactionMessage(Context.Message, new Emoji("\U0000274c"), "That is not a valid amount of messages!");
 
             int lim = (amount < 100) ? amount + 1 : 100;
-            var m = (await Context.Channel.GetMessagesAsync(lim).Flatten()).Where(x => DateTime.Now - x.CreatedAt < TimeSpan.FromDays(14));
+            var msgList = Context.Channel.GetMessagesAsync(lim).Flatten().Where(x => DateTime.Now - x.CreatedAt < TimeSpan.FromDays(14)).ToEnumerable();
 
-            await (Context.Channel as ITextChannel).DeleteMessagesAsync(m.Take(amount));
-            await Context.Channel.SendMessageAsync($"I deleted `{m.Take(amount).Count()}` messages from the channel! :sparkles:");
+            await (Context.Channel as ITextChannel).DeleteMessagesAsync(msgList.Take(amount));
+            await Context.Channel.SendMessageAsync($"I deleted `{msgList.Take(amount).Count()}` messages from the channel! :sparkles:");
         }
     }
 }

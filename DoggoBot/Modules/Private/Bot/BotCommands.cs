@@ -14,7 +14,7 @@ using DoggoBot.Core.Services.Configuration.Bot;
 namespace DoggoBot.Modules.Private.Bot
 {
     [Name("Bot")]
-    [Summary("Contains bot commands for owner")]
+    [Summary("Contains private bot commands")]
     [RequiredUserType(TypeOfUser.Doggo)]
     public class BotCommands : DoggoModuleBase
     {
@@ -50,7 +50,7 @@ namespace DoggoBot.Modules.Private.Bot
             if (streaming == false && game == "reset")
                 await borkClient.SetGameAsync(borkConfig.Load().DiscordGame);
             else if (streaming == true)
-                await borkClient.SetGameAsync(game, "https://twitch.tv/zeplin88", StreamType.Twitch);
+                await borkClient.SetGameAsync(game, "https://twitch.tv/zeplin88", ActivityType.Streaming);
             else
                 await borkClient.SetGameAsync(game);
         }

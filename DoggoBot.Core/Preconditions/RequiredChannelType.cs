@@ -16,23 +16,22 @@ namespace DoggoBot.Core.Preconditions
 
         public override Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, CommandInfo command, IServiceProvider services)
         {
-            if (ourType != null)
+            if (ourType == TypeOfChannel.Guild)
             {
-                if (ourType == TypeOfChannel.Guild)
-                    if (!(context.User is IGuildUser))
-                        return Task.FromResult(PreconditionResult.FromError("You can only use this command in a guild!"));
-                    else
-                        return Task.FromResult(PreconditionResult.FromSuccess());
-                else if (ourType == TypeOfChannel.Nsfw)
-                    if (!(context.Channel as ITextChannel).IsNsfw)
-                        return Task.FromResult(PreconditionResult.FromError("You can only use this command in a Nsfw channel!"));
-                    else
-                        return Task.FromResult(PreconditionResult.FromSuccess());
+                if (context.Guild == null)
+                    return Task.FromResult(PreconditionResult.FromError("You can only use this command in a guild!"));
                 else
-                    return Task.FromResult(PreconditionResult.FromError("ChannelType did not hit if statements - Should not see this error message!"));
+                    return Task.FromResult(PreconditionResult.FromSuccess());
             }
-            else
-                return Task.FromResult(PreconditionResult.FromError("ChannelType is null - Should not see this error message!"));
+            else if (ourType == TypeOfChannel.Nsfw)
+            {
+                if (context.Guild == null)
+                    return Task.FromResult(PreconditionResult.FromError("Nsfw commands can only be used in a guild!"));
+                else if (!(context.Channel as ITextChannel).IsNsfw)
+                    return Task.FromResult(PreconditionResult.FromError("You can only use this command in a Nsfw channel!"));
+            }
+
+            return Task.FromResult(PreconditionResult.FromSuccess());
         }
     }
 

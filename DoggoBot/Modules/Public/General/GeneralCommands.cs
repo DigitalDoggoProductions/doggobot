@@ -41,6 +41,7 @@ namespace DoggoBot.Modules.Public.General
         public async Task StatsAsync()
         {
             String commits;
+            IUser me = (await borkClient.GetApplicationInfoAsync()).Owner;
 
             HttpClient ourHttp = new HttpClient();
             ourHttp.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; WOW64; Trident/6.0)");
@@ -64,7 +65,7 @@ namespace DoggoBot.Modules.Public.General
 
             await ReplyEmbed(new EmbedBuilder()
                 .WithThumbnailUrl(borkClient.CurrentUser.GetAvatarUrl())
-                .WithFooter(x => { x.Text = "Created by: Doggo~ ❤#3899"; })
+                .WithFooter(x => { x.Text = $"Created by: {me}"; })
                 .WithColor(ourColors.EmbedMint)
                 .AddField(x => { x.Name = "Latest Changes"; x.Value = commits; x.IsInline = true; })
                 .AddField(x => { x.Name = "Important Links"; x.Value = "• [Github Page](https://github.com/DigitalDoggoProductions/doggobot)\n• [DoggoBot Support Server](https://discord.gg/DwDzPBr)\n• [Twitter Updates](https://twitter.com/tweetdoggobot)\n• [Digital Doggo Productions](https://github.com/DigitalDoggoProductions)"; x.IsInline = true; })

@@ -49,14 +49,10 @@ namespace DoggoBot.Core.Services.Audio
                 else { await audio.StopAsync(); }
 
                 if (ourGuildProcess.TryRemove(guild.Id, out Process proc))
-                    proc.Kill();
+                    try { proc.Kill(); }
+                    catch { }
 
-                await Task.Delay(1000);
-
-                foreach (var song in new DirectoryInfo($@"Data/Audio/{guild.Id}").GetFiles())
-                    File.Delete(song.FullName);
-
-                Directory.Delete($@"Data/Audio/{guild.Id}");
+                await ClearSongs(guild.Id);
             }
         }
 
@@ -94,6 +90,18 @@ namespace DoggoBot.Core.Services.Audio
                 return guildAudio;
             else
                 return guildAudio;
+        }
+
+        private async Task ClearSongs(ulong id)
+        {
+            await Task.Delay(1000);
+
+            foreach (var song in new DirectoryInfo($@"Data/Audio/{id}").GetFiles())
+                File.Delete(song.FullName);
+
+            Directory.Delete($@"Data/Audio/{id}");
+
+            await Task.CompletedTask;
         }
     }
 }

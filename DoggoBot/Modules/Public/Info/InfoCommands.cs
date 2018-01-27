@@ -28,7 +28,7 @@ namespace DoggoBot.Modules.Public.Info
                 .WithThumbnailUrl(u.GetAvatarUrl())
                 .WithColor(ourColors.EmbedPurple)
                 .AddField(x => { x.Name = "User Information"; x.Value = string.Join("\n", $"**Name:** `{u.Username}#{u.Discriminator}`", $"**Nickname:** {u.Nickname ?? "No Nickname"}", $"**ID:** {u.Id}"); x.IsInline = true; })
-                .AddField(x => { x.Name = "Game and Status"; x.Value = string.Join("\n", $"**Status:** {u.Status}", $"**Game:** {ValidateUserGame(u)}"); x.IsInline = true; })
+                .AddField(x => { x.Name = "Game and Status"; x.Value = string.Join("\n", $"**Status:** {u.Status}", $"**Activity:** {ValidateActivity(u)}"); x.IsInline = true; })
                 .AddField(x => { x.Name = "Joined"; x.Value = string.Join("\n", $"**Joined Discord:** {u.CreatedAt:MM/dd/yyyy}", $"**Joined Server:** {u.JoinedAt:MM/dd/yyyy}"); x.IsInline = true; })
                 .AddField(x => { x.Name = "Roles"; x.Value = string.Join("\n", $"**Role Count:** {u.RoleIds.Count - 1}", $"**Role Names:** {string.Join(", ", u.RoleIds.Select(_r => u.Guild.GetRole(_r)).Where(r => r != null).Take(5).Where(r => r.Id != r.Guild.EveryoneRole.Id).Select(r => r.Name))}"); x.IsInline = true; }).Build());
         }
@@ -42,7 +42,7 @@ namespace DoggoBot.Modules.Public.Info
                 .WithThumbnailUrl(u.GetAvatarUrl())
                 .WithColor(ourColors.EmbedPurple)
                 .AddField(x => { x.Name = "User Information"; x.Value = string.Join("\n", $"**Name:** `{u.Username}#{u.Discriminator}`", $"**Nickname:** {u.Nickname ?? "No Nickname"}", $"**ID:** {u.Id}"); x.IsInline = true; })
-                .AddField(x => { x.Name = "Game and Status"; x.Value = string.Join("\n", $"**Status:** {u.Status}", $"**Game:** {ValidateUserGame(u)}"); x.IsInline = true; })
+                .AddField(x => { x.Name = "Activity and Status"; x.Value = string.Join("\n", $"**Status:** {u.Status}", $"**Activity:** {ValidateActivity(u)}"); x.IsInline = true; })
                 .AddField(x => { x.Name = "Joined"; x.Value = string.Join("\n", $"**Joined Discord:** {u.CreatedAt:MM/dd/yyyy}", $"**Joined Server:** {u.JoinedAt:MM/dd/yyyy}"); x.IsInline = true; })
                 .AddField(x => { x.Name = "Roles"; x.Value = string.Join("\n", $"**Role Count:** {u.RoleIds.Count - 1}", $"**Role Names:** {string.Join(", ", u.RoleIds.Select(_r => u.Guild.GetRole(_r)).Where(r => r != null).Take(5).Where(r => r.Id != r.Guild.EveryoneRole.Id).Select(r => r.Name))}"); x.IsInline = true; }).Build());
 
@@ -73,17 +73,12 @@ namespace DoggoBot.Modules.Public.Info
             await ReplyEmbed(eb.Build());
         }
 
-        /// <summary>
-        /// Validate whether or not a user if playing a game
-        /// </summary>
-        /// <param name="u">IGuildUser to Validate</param>
-        /// <returns>String saying their game or message saying no game</returns>
-        private string ValidateUserGame(IGuildUser u)
+        public string ValidateActivity(IGuildUser u)
         {
-            if (u.Game == null)
-                return "Not Playing a Game";
+            if (u.Activity?.Name == null)
+                return "No Activity";
             else
-                return u.Game.Value.Name;
+                return u.Activity.Name;
         }
     }
 }

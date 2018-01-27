@@ -16,7 +16,7 @@ namespace DoggoBot.Core.Models.UbranJson
         public string Example { get; set; }
         [JsonProperty("thumbs_up")]
         public int ThumbsUp { get; set; }
-        [JsonProperty("thumps_down")]
+        [JsonProperty("thumbs_down")]
         public int ThumbsDown { get; set; }
     }
 

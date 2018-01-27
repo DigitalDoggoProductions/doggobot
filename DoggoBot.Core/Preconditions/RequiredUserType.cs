@@ -20,33 +20,41 @@ namespace DoggoBot.Core.Preconditions
 
         public override Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, CommandInfo command, IServiceProvider services)
         {
-            var user = context.User as IGuildUser;
+            var guildUser = context.User as IGuildUser;
 
-            if (ourType != null)
+            if (guildUser == null)
+                return Task.FromResult(PreconditionResult.FromError("Command must be used in a guild!"));
+
+            if (ourType == TypeOfUser.GuildModerator)
             {
-                if (user == null)
-                    return Task.FromResult(PreconditionResult.FromError("Command must be used in a Guild"));
-
-                if (ourType == TypeOfUser.GuildModerator)
-                    if (user.GuildPermissions.BanMembers || user.GuildPermissions.KickMembers || user.GuildPermissions.ManageMessages)
-                        return Task.FromResult(PreconditionResult.FromSuccess());
-
-                if (ourType == TypeOfUser.GuildAdmin)
-                    if (user.GuildPermissions.Administrator)
-                        return Task.FromResult(PreconditionResult.FromSuccess());
-
-                if (ourType == TypeOfUser.GuildOwner)
-                    if (user.Id == user.Guild.OwnerId)
-                        return Task.FromResult(PreconditionResult.FromSuccess());
-
-                if (ourType == TypeOfUser.Doggo)
-                    if (services.GetRequiredService<BotConfiguration>().Load().OwnerIDs.Contains(context.User.Id))
-                        return Task.FromResult(PreconditionResult.FromSuccess());
-
-                return Task.FromResult(PreconditionResult.FromError("User does not have the correct permissions."));
+                if (guildUser.GuildPermissions.BanMembers || guildUser.GuildPermissions.KickMembers || guildUser.GuildPermissions.ManageMessages)
+                    return Task.FromResult(PreconditionResult.FromSuccess());
+                else
+                    return Task.FromResult(PreconditionResult.FromError($"User requires guild permission(s): `Ban Members` | `Kick Members` | `Manage Messages`"));
             }
-            else
-                return Task.FromResult(PreconditionResult.FromError("No defined TypeOfUser - Should not see this error message!"));
+            else if (ourType == TypeOfUser.GuildAdmin)
+            {
+                if (guildUser.GuildPermissions.Administrator)
+                    return Task.FromResult(PreconditionResult.FromSuccess());
+                else
+                    return Task.FromResult(PreconditionResult.FromError($"User requires guild permission: `Administrator`"));
+            }
+            else if (ourType == TypeOfUser.GuildOwner)
+            {
+                if (guildUser.Id == guildUser.Guild.OwnerId)
+                    return Task.FromResult(PreconditionResult.FromSuccess());
+                else
+                    return Task.FromResult(PreconditionResult.FromError("Only the guild owner can use this command"));
+            }
+            else if (ourType == TypeOfUser.Doggo)
+            {
+                if (services.GetRequiredService<BotConfiguration>().Load().OwnerIDs.Contains(guildUser.Id))
+                    return Task.FromResult(PreconditionResult.FromSuccess());
+                else
+                    return Task.FromResult(PreconditionResult.FromError("Only the bot owner can use this command"));
+            }
+
+            return Task.FromResult(PreconditionResult.FromSuccess());
         }
     }
 
