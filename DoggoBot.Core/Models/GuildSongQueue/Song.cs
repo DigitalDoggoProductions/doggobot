@@ -1,8 +1,10 @@
 ﻿using System;
 
-namespace DoggoBot.Core.Models.SongQueue
+using Discord;
+
+namespace DoggoBot.Core.Models.GuildSongQueue
 {
-    public class SongQueueItem
+    public class Song
     {
         // Song Information
         public string SongTitle { get; set; }
@@ -11,7 +13,6 @@ namespace DoggoBot.Core.Models.SongQueue
         public TimeSpan SongDuration { get; set; }
 
         // Discord Information
-        public ulong DiscordRequester { get; set; }
-        public string DiscordRequesterAvatar { get; set; }
+        public IUser DiscordRequester { get; set; }
     }
 }

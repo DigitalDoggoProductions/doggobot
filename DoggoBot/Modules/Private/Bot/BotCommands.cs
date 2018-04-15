@@ -48,7 +48,7 @@ namespace DoggoBot.Modules.Private.Bot
             await Context.Message.AddReactionAsync(new Emoji("\U00002705"));
 
             if (streaming == false && game == "reset")
-                await borkClient.SetGameAsync(borkConfig.Load().DiscordGame);
+                await borkClient.SetGameAsync(borkConfig.LoadedSecrets.DiscordGame);
             else if (streaming == true)
                 await borkClient.SetGameAsync(game, "https://twitch.tv/zeplin88", ActivityType.Streaming);
             else

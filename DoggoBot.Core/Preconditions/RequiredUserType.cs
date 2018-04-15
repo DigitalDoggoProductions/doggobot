@@ -48,7 +48,7 @@ namespace DoggoBot.Core.Preconditions
             }
             else if (ourType == TypeOfUser.Doggo)
             {
-                if (services.GetRequiredService<BotConfiguration>().Load().OwnerIDs.Contains(guildUser.Id))
+                if (services.GetRequiredService<BotConfiguration>().LoadedSecrets.OwnerIDs.Contains(guildUser.Id))
                     return Task.FromResult(PreconditionResult.FromSuccess());
                 else
                     return Task.FromResult(PreconditionResult.FromError("Only the bot owner can use this command"));

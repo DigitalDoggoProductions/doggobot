@@ -12,8 +12,6 @@ using Discord.WebSocket;
 
 using Newtonsoft.Json.Linq;
 
-using Tweetinvi;
-
 using DoggoBot.Core.Models.Module;
 using DoggoBot.Core.Common.Colors;
 using DoggoBot.Core.Services.Configuration.Bot;
@@ -77,7 +75,7 @@ namespace DoggoBot.Modules.Public.General
         [Summary("Receive the invite link for DoggoBot")]
         [Remarks("invite")]
         public async Task InviteAsync()
-            => await ReplyEmbed(new EmbedBuilder().WithColor(ourColors.EmbedBlue).WithDescription("**Invite me to your server!**\n\n[Invite Link](https://discordapp.com/oauth2/authorize?client_id=" + (await borkClient.GetApplicationInfoAsync()).Id + "&scope=bot&permissions=" + borkConfig.Load().BotPermissions + ")").Build());
+            => await ReplyEmbed(new EmbedBuilder().WithColor(ourColors.EmbedBlue).WithDescription("**Invite me to your server!**\n\n[Invite Link](https://discordapp.com/oauth2/authorize?client_id=" + (await borkClient.GetApplicationInfoAsync()).Id + "&scope=bot&permissions=" + borkConfig.LoadedSecrets.BotPermissions + ")").Build());
 
         [Command("ping")]
         [Alias("bork")]
@@ -85,20 +83,5 @@ namespace DoggoBot.Modules.Public.General
         [Remarks("ping")]
         public async Task PingAsync()
             => await ReplyAsync($"**Bork! - {borkClient.Latency}ms**");
-
-        [Command("tweet")]
-        [Alias("yeet")]
-        [Summary("Send a tweet to the DoggoBot twitter saying 'yeet'")]
-        [Remarks("tweet")]
-        public async Task SendTweetAsync()
-        {
-            borkConfig.AddTweetToCount();
-            var Tweet = await TweetAsync.PublishTweet($"{borkConfig.Load().TweetCount}. Yeet (by: {Context.Message.Author})");
-
-            await ReplyEmbed(new EmbedBuilder()
-                .WithColor(ourColors.RandomColor())
-                .WithDescription($"You just made me tweet 'Yeet'\n\n[View your Tweet]({Tweet.Url})")
-                .Build());
-        }
     }
 }

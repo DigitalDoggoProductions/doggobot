@@ -50,7 +50,7 @@ namespace DoggoBot.Core.Models.Module
         }
 
         /// <summary>
-        /// Send am embed without having to type all that crap before the actual embed
+        /// Send an embed without having to type all that crap before the actual embed
         /// </summary>
         /// <param name="eb">Embed</param>
         /// <returns>Embed to Channel</returns>
@@ -72,6 +72,16 @@ namespace DoggoBot.Core.Models.Module
                 return Context.Channel.SendMessageAsync(response);
 
             else { var t1 = message.AddReactionAsync(emoji); var t2 = Context.Channel.SendMessageAsync(response); Task.WhenAll(t1, t2); return t2; }
+        }
+
+        public async Task<IUserMessage> DoMessages(IMessageChannel chan, IUserMessage todelete, string tosend)
+        {
+            var t1 = todelete.DeleteAsync();
+            var t2 = chan.SendMessageAsync(tosend);
+
+            await Task.WhenAll(t1, t2);
+
+            return await t2;
         }
     }
 }

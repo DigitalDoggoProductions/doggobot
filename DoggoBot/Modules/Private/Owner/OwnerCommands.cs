@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -7,11 +8,13 @@ using System.Collections.Generic;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using Discord.Addons.InteractiveCommands;
 
 using Newtonsoft.Json;
 
 using DoggoBot.Core.Preconditions;
 using DoggoBot.Core.Models.Module;
+using DoggoBot.Core.Services.Configuration.Bot;
 
 namespace DoggoBot.Modules.Private.Owner
 {
@@ -21,9 +24,15 @@ namespace DoggoBot.Modules.Private.Owner
     public class OwnerCommands : DoggoModuleBase
     {
         private DiscordSocketClient borkClient;
+        private BotConfiguration borkConfig;
+        private InteractiveService borkInteract;
 
-        public OwnerCommands(DiscordSocketClient client)
-            => borkClient = client;
+        public OwnerCommands(DiscordSocketClient client, BotConfiguration config, InteractiveService interact)
+        {
+            borkClient = client;
+            borkConfig = config;
+            borkInteract = interact;
+        }
 
         [Command("guilds")]
         [Summary("Get a list of all the guilds that the bot is in")]
@@ -81,14 +90,70 @@ namespace DoggoBot.Modules.Private.Owner
                 await DoMessages(Context.Channel, Context.Message, text);
         }
 
-        private async Task<IUserMessage> DoMessages(IMessageChannel chan, IUserMessage todelete, string tosend)
+        [Command("block")]
+        [Summary("Block a user from executing commands, helpful for spammers")]
+        [Remarks("block")]
+        public async Task BlockAsync()
         {
-            var t1 = todelete.DeleteAsync();
-            var t2 = chan.SendMessageAsync(tosend);
+            IUserMessage ourMsg;
 
-            await Task.WhenAll(t1, t2);
+            ourMsg = await ReplyAsync("Would you like to remove a block, or add one? [Remove, Add]");
 
-            return await t2;
+            var mRes = await borkInteract.WaitForMessage(Context.User, ourMsg.Channel, TimeSpan.FromSeconds(60));
+
+            if (mRes != null)
+            {
+                if (mRes.Content.ToLower() == "remove")
+                {
+                    ourMsg = await DoMessages(ourMsg.Channel, ourMsg, "Please provide the user Id to remove from the block list.");
+                    mRes = await borkInteract.WaitForMessage(mRes.Author, ourMsg.Channel, TimeSpan.FromSeconds(60));
+
+                    if (mRes != null)
+                        borkConfig.RemoveUserBlock(Convert.ToUInt64(mRes.Content));
+
+                    await DoMessages(ourMsg.Channel, ourMsg, $"Thank you, I've removed `{borkClient.GetUser(Convert.ToUInt64(mRes.Content))}` from the Block List.");
+                }
+                else if (mRes.Content.ToLower() == "add")
+                {
+                    ourMsg = await DoMessages(ourMsg.Channel, ourMsg, "Please provide the user Id to add.");
+                    mRes = await borkInteract.WaitForMessage(mRes.Author, ourMsg.Channel, TimeSpan.FromSeconds(60));
+
+                    if (mRes != null)
+                    {
+                        ulong userId = Convert.ToUInt64(mRes.Content);
+
+                        ourMsg = await DoMessages(ourMsg.Channel, ourMsg, "Is this permanent? [true, false]");
+                        mRes = await borkInteract.WaitForMessage(mRes.Author, ourMsg.Channel, TimeSpan.FromSeconds(60));
+
+                        if (mRes != null)
+                        {
+                            bool Permanent = Convert.ToBoolean(mRes.Content);
+
+                            ourMsg = await DoMessages(ourMsg.Channel, ourMsg, "Please provide a reason for the block.");
+                            mRes = await borkInteract.WaitForMessage(mRes.Author, ourMsg.Channel, TimeSpan.FromSeconds(60));
+
+                            if (mRes != null)
+                            {
+                                borkConfig.AddUserBlock(userId, Permanent, DateTime.Now, mRes.Content);
+
+                                await DoMessages(ourMsg.Channel, ourMsg, $"Thank you, I've added `{borkClient.GetUser(userId)}` to the block list.\n\n`Reason:` {mRes.Content}\n`Permanent:` {Permanent}");
+                            }
+                        }
+                    }
+                }
+                else
+                    await DoMessages(ourMsg.Channel, ourMsg, "Your request was invalid, try again.");
+            }
+            else
+                await DoMessages(ourMsg.Channel, ourMsg, "Your request timed out, try again.");
+
+            //if (borkConfig.BlockedUsers.ContainsKey(Id))
+            //    await ReplyAsync("That user has already been blocked :x:");
+            //else
+            //{
+            //    borkConfig.AddUserBlock(Id, isTemp, DateTime.Today, reason);
+            //    await ReplyAsync($"Alrighty, I've added `{borkClient.GetUser(Id).Username}` to the block list.\n\n`Reason:` *{reason}*\n`Temp:` *{isTemp}*");
+            //}
         }
     }
 }

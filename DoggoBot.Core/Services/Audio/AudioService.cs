@@ -80,7 +80,11 @@ namespace DoggoBot.Core.Services.Audio
         {
             Process guildAudio = Process.Start(new ProcessStartInfo
             {
+#if DEBUG
                 FileName = "ffmpeg.exe",
+#else
+                FileName = "ffmpeg",
+#endif
                 Arguments = $"-hide_banner -loglevel panic -i \"{songpath}\" -vol 80 -ac 2 -f s16le -ar 48000 pipe:1",
                 UseShellExecute = false,
                 RedirectStandardOutput = true

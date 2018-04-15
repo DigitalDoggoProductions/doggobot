@@ -9,8 +9,6 @@ using Discord.Addons.InteractiveCommands;
 
 using Microsoft.Extensions.DependencyInjection;
 
-using Tweetinvi;
-
 using DoggoBot.Core.Services.Audio;
 using DoggoBot.Core.Services.Configuration.Bot;
 using DoggoBot.Common.Handlers.CommandHandler;
@@ -44,20 +42,18 @@ namespace DoggoBot
                 CaseSensitiveCommands = false
             });
 
-            var serv = GenerateServices();
-            var creds = serv.GetRequiredService<BotConfiguration>().Load();
-            await serv.GetRequiredService<CommandHandler>().InitAsync();
+            var services = GenerateServices();
+            var secrets  = services.GetRequiredService<BotConfiguration>().LoadSecrets();
+            services.GetRequiredService<BotConfiguration>().LoadBlockedUsers();
+            await services.GetRequiredService<CommandHandler>().InitAsync();
 
             borkClient.Log += Logger;
             borkCommands.Log += Logger;
 
-            await borkClient.LoginAsync(TokenType.Bot, creds.DiscordToken);
+            await borkClient.LoginAsync(TokenType.Bot, secrets.DiscordToken);
             await borkClient.StartAsync();
 
-            // Easiest way to do this, looks crappy though
-            Auth.SetUserCredentials(creds.ConsumerKey, creds.ConsumerSecret, creds.AccessToken, creds.AccessTokenSecret);
-
-            await borkClient.SetGameAsync(creds.DiscordGame);
+            await borkClient.SetGameAsync(secrets.DiscordGame);
 
             await Task.Delay(-1);
         }

@@ -85,7 +85,7 @@ namespace DoggoBot.Modules.Public.Help
                                 info = null;
 
                                 foreach (var c in src.Commands)
-                                    info += $"• **{c.Command.Name} - [Aliases: {string.Join(", ", c.Command.Aliases) ?? "No Aliases"}]**\n*Summary: {c.Command.Summary ?? "No summar provided"}*\n*Usage: {borkConfig.Load().BotPrefix + c.Command.Remarks}*";
+                                    info += $"• **{c.Command.Name} - [Aliases: {string.Join(", ", c.Command.Aliases) ?? "No Aliases"}]**\n*Summary: {c.Command.Summary ?? "No summar provided"}*\n*Usage: {borkConfig.LoadedSecrets.BotPrefix + c.Command.Remarks}*";
 
                                 await DoMessages(ourMsg.Channel, ourMsg, $"Here you go, glad I could help!\n\n__Command Information__\n{info}");
                             }
@@ -99,16 +99,6 @@ namespace DoggoBot.Modules.Public.Help
                 else
                     await DoMessages(ourMsg.Channel, ourMsg, "**Your request timed out, please use the help command again.**");
             }
-        }
-
-        private async Task<IUserMessage> DoMessages(IMessageChannel chan, IUserMessage todelete, string tosend)
-        {
-            var t1 = todelete.DeleteAsync();
-            var t2 = chan.SendMessageAsync(tosend);
-
-            await Task.WhenAll(t1, t2);
-
-            return await t2;
         }
     }
 }
